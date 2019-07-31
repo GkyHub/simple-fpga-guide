@@ -81,5 +81,9 @@
 3. 插入SD卡，启动板卡。
 4. 通过串口或SSH连接硬件。
 
+## 配置文件系统
+
+经过以上几步，已经可以在FPGA板卡上启动linux，但是一些基本的功能很可能还不全。在FPGA板卡上安装一些基本程序会比较麻烦。因此，可以参考[https://blog.csdn.net/telantan/article/details/73928695](https://blog.csdn.net/telantan/article/details/73928695)，在文件系统放到SD卡上之前预先进行一些配置。
+
 
 
