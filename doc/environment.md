@@ -1,6 +1,13 @@
 # 搭建Xilinx FPGA开发环境
 未注明时，本文默认工作环境为Linux(Ubuntu/CentOS/...)系统。在开始安装环境之前，建议[注册Xilinx官方账号](https://china.xilinx.com/registration/create-account.html)，方便下载相应文件。
 
+Xilinx FPGA开发中主要用到以下几个软件：
+- **Vivado**：Xilinx的官方集成开发环境，完整版包含RTL/Block Design/HLS等开发方式，且包含仿真/综合/布局布线工具等。
+- **Petalinux(可选)**：用于制作FPGA SoC的linux系统内核的工具。使用Micro Blaze软核或Zynq系列的芯片时，需要运行linux系统则必备。仅限Linux系统安装。
+- **第三方仿真软件(可选)**：Vivado支持联合第三方仿真软件来进行系统仿真，诸如ModelSim/Synopsys VCS等软件都可以提供较好的仿真体验。当需要使用Xilinx的IP进行联合仿真时，需要通过Vivado预先编译好用于第三方软件的仿真库。
+- **第三方综合软件（可选）**：Vivado支持使用第三方综合软件来生成网表，如symplify。
+- **辅助软件以及驱动**
+
 ## 安装Vivado
 1. 下载所需版本的Vivado安装文件。官方下载地址: [https://china.xilinx.com/support/download.html](https://china.xilinx.com/support/download.html)
 2. 获取license(请各凭本事)。如果从官方购买了板卡，官方通常会提供一份license。
