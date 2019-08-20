@@ -53,15 +53,6 @@
 
 **模块的端口**：
 
-<style>
-table th:first-of-type {
-	width: 60px;
-}
-table th:nth-of-type(2) {
-    width: 180px;
-}
-</style>
-
 端口类型 | 命名规则 | 说明
 :-      | :-       | :-
 时钟 | ```clk{_名称}{_频率}``` | 包含多时钟输入的模块通过名称区分不同的时钟<br>对频率有要求的时钟应注明频率。
