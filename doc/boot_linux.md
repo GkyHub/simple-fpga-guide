@@ -5,11 +5,17 @@
 - [https://blog.csdn.net/lulugay/article/details/83867655](https://blog.csdn.net/lulugay/article/details/83867655)
 - [https://blog.csdn.net/lulugay/article/details/83240981](https://blog.csdn.net/lulugay/article/details/83240981)
 
+在最后一部分，我们会对流程中的细节和具体发生了什么事情进行说明。
+
 ## 准备FPGA部分
 1. 进入Vivado工程，运行Generate bitstream
 2. 导出工程至SDK，```File->Export->Export Hardware...```。选择路径时可以选择local to project或任意位置。选择include bitstream。
 
 以上步骤完成后，会在导出位置生成xxx.hdf文件。
+
+```
+注意：确保镜像能正确启动的关键是工程中的Zynq MPSoC这个IP的配置要和板卡一致！对于开发板，通常在工程中选择板卡类型后，Vivado可以提供一组预设值。对于定制的板卡，需要根据原理图配置DDR和I/O的部分。
+```
 
 ## 准备镜像部分
 1. 建立工程
@@ -34,7 +40,7 @@
 
    如果需要对内核进行其他配置，请根据[UG1144](https://www.xilinx.com/support/documentation/sw_manuals/xilinx2019_1/ug1144-petalinux-tools-reference-guide.pdf)执行。一些常用的配置可以参考Xilinx wiki提供的一个[教程](https://xilinx-wiki.atlassian.net/wiki/spaces/A/pages/18841937/Zynq+UltraScale+MPSoC+Ubuntu+part+2+-+Building+and+Running+the+Ubuntu+Desktop+From+Sources)。
 
-3. 编译（通常时间较长10-30分钟）
+3. 编译（第一次时间较长，10-30分钟，以后可以增量编译）
    ``` bash
    petalinux-build
    ```
@@ -84,6 +90,22 @@
 ## 配置文件系统
 
 经过以上几步，已经可以在FPGA板卡上启动linux，但是一些基本的功能很可能还不全。在FPGA板卡上安装一些基本程序会比较麻烦。因此，可以参考[https://blog.csdn.net/telantan/article/details/73928695](https://blog.csdn.net/telantan/article/details/73928695)，在文件系统放到SD卡上之前预先进行一些配置。
+
+## Note
+
+1. Vivado导出的hdf文件决定了：
+    - Zynq上CPU的I/O配置
+    - CPU和FPGA的通信方式，包括AXI和中断
+    - FPGA上的逻辑
+   第一项决定了CPU能不能正确启动，第二和第三项决定了CPU和FPGA能否正确通信。如果只是想启动板卡，做简单的boot测试，可以只建立一个包含单一Zynq MPSoC IP的工程。
+
+2. petalinux建立工程时，选择template相当于空工程。选择BSP则是导入一个已有的工程。BSP可以包含一些预置的配置，以便在不同的项目之间复用。
+
+3. ```--get-hw-description```的配置和```-c kernel```可以认为是独立的，不具有先后顺序。前者会觉得设备树、启动方式等；后者是决定内核中包含哪些驱动。
+
+4. SD卡启动时，会从第一个分区里面找image.ub和BOOT.bin，然后根据配置的启动参数挂载根目录。文件系统和BOOT分区里面的东西关系不大，大多数时候可以随意替换ROOTFS，但需要时针对ARM编译的。
+
+5. 拷贝文件系统时，为了把软链接也正确复制过去，不能使用cp。
 
 
 
