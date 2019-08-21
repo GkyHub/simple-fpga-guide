@@ -7,7 +7,7 @@
 * [宏定义](#3-%e5%ae%8f%e5%ae%9a%e4%b9%89)
 * [模块及端口声明](#4-%e6%a8%a1%e5%9d%97%e5%8f%8a%e7%ab%af%e5%8f%a3%e5%a3%b0%e6%98%8e)
 * [逻辑代码](#5-%e9%80%bb%e8%be%91%e4%bb%a3%e7%a0%81)
-* [设计规范](#6-%e8%ae%be%e8%ae%a1%e8%a7%84%e8%8c%83)
+* [设计规范及建议](#6-%e8%ae%be%e8%ae%a1%e8%a7%84%e8%8c%83)
 
 ## 1. 一般规则
 * 缩进宽度：4（转换为空格）
@@ -66,10 +66,10 @@
 
 ```verilog
 module adder_tree#(
-    parameter DATA_IN_W = 8,    // 输入数据位宽
-    parameter DATA_NUM  = 16,   // 输入数据个数
-    parameter DATA_O_W  = DATA_IN_W + $clog2(DATA_NUM)
-                                // 输出数据位宽（不可配置）
+    parameter DATA_IN_W     = 8,    // 输入数据位宽
+    parameter DATA_NUM      = 16,   // 输入数据个数
+    parameter C_DATA_O_W    = DATA_IN_W + $clog2(DATA_NUM)
+                                    // 输出数据位宽
     )(
     input   clk,
     input   rst_n,          // 同步低电平复位
@@ -83,7 +83,7 @@ module adder_tree#(
     output                                  s_axis_din_ready,
 
     // 输出数据，axi_stream master接口
-    output  [DATA_O_W               -1 : 0] m_axis_dout_data,
+    output  [C_DATA_O_W             -1 : 0] m_axis_dout_data,
     output                                  m_axis_dout_valid,
     input                                   m_axis_dout_ready,
     );
@@ -173,7 +173,7 @@ end
 reg a;
 ```
 
-## 6. 设计规范
+## 6. 设计规范和建议
 
 ### 6.1. 一致性
 
@@ -190,11 +190,13 @@ reg a;
 
 * **减小扇出**：过大的扇出通常出现在：复位/长流水线的阻塞（使能）信号/大规模阵列的数据广播。复位信号在确保功能正确地情况下可以人为地用寄存器延时一个周期。对于FPGA而言，也可以采用BUFG来提高信号驱动能力。带有使能信号的长流水线可以在中间进行一次截断。数据广播可以增加树形寄存器结构或者采用脉动阵列的形式减少扇出。采用```(*max_fanout*)```属性也可以让工具自动进行寄存器复制等优化手段。
 
-* **尝试不同的布线策略**
+* **尝试不同的布线策略**：布局布线过程一般是基于一些非确定的搜索和优化方法，很难直接控制。因此可以在布局布线时尝试不同的策略，选择最优的结果。一般而言很难根据经验判断某种布局布线的策略可能更好，最好是去尝试所有策略。
 
 ### 6.3. 资源占用的优化
 
+* **适配FPGA资源的逻辑设计**：
 
+* 
 
 ### 6.4. 异步信号的处理
 
