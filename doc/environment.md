@@ -29,7 +29,7 @@ Xilinx FPGA开发中主要用到以下几个软件：
 1. 下载所需版本的petalinux。petalinux的版本需要和Vivado的版本对应。官方下载地址: [https://china.xilinx.com/support/download/index.html/content/xilinx/zh/downloadNav/embedded-design-tools.html](https://china.xilinx.com/support/download/index.html/content/xilinx/zh/downloadNav/embedded-design-tools.html)
 2. 根据UG1144中的说明安装所需的库。手册中会给出对应操作系统所需要运行的命令行代码。例如对于ubuntu：
    ```bash
-   sudo apt-get install -y gcc git make net-tools libncurses5-dev tftpd zlib1g-dev libssl-dev flex bison libselinux1 gnupg wget diffstat chrpath socat xterm autoconf libtool tar unzip texinfo zlib1g-dev gcc-multilib build-essential -dev zlib1g:i386 screen pax gzip
+   sudo apt-get install -y gcc git make net-tools libncurses5-dev tftpd zlib1g-dev libssl-dev flex bison libselinux1 gnupg wget diffstat chrpath socat xterm autoconf libtool tar unzip texinfo gcc-multilib build-essential zlib1g:i386 screen pax gzip
    ```
 3. 直接运行下载后的文件，在命令行中指定安装位置。注意：不能使用sudo权限或以root身份安装；安装的位置需要在当前用户的权限范围内。
    ```bash
@@ -51,4 +51,22 @@ Xilinx FPGA开发中主要用到以下几个软件：
   ```bash
   sudo apt-get install gparted
   ```
+
+## Trouble Shooting
+
+官方手册一般会给一些trouble shooting的内容，但是还可能出现一些漏洞，这里给出一些补充：
+
+1. Vivado的卸载
+2. Petalinux安装问题：无法找到zlib1g:i386。原因：主机是amd64架构，默认镜像不包含i386的包，需要单独添加。解决方法：
+    ``` bash
+    sudo dpkg --add-architecture i386
+    sudo apt-get update
+    ```
+3. Petalinux安装问题：awk(bad read address)。原因：缺少gawk库。解决方法：
+    ``` bash
+    sudo apt-get install gawk
+    ```
+4. 由于Petalinux环境配置导致bash启动慢。原因：settings.sh会监测系统环境是否符合petalinux要求。解决方法：注释掉settings.sh的最后一行。
+5. Petalinux的卸载：直接删除文件夹
+
 
