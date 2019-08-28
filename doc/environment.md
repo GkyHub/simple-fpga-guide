@@ -56,7 +56,11 @@ Xilinx FPGA开发中主要用到以下几个软件：
 
 官方手册一般会给一些trouble shooting的内容，但是还可能出现一些漏洞，这里给出一些补充：
 
-1. Vivado的卸载
+1. Vivado的卸载：Linux系统下，Vivado的卸载工具在安装路径下的隐藏文件夹中。
+    ``` bash
+    cd <xilinx-directory>/.xinstall/<vivado-folder>
+    sudo ./xinstall -Uninstall
+    ```
 2. Petalinux安装问题：无法找到zlib1g:i386。原因：主机是amd64架构，默认镜像不包含i386的包，需要单独添加。解决方法：
     ``` bash
     sudo dpkg --add-architecture i386
