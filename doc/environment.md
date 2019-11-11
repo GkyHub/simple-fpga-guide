@@ -44,6 +44,10 @@ Xilinx FPGA开发中主要用到以下几个软件：
    echo $PETALINUX
    ```
 
+## 仿真软件
+
+Vivado自带仿真工具xsim。开发者也可以使用自己的仿真软件，如modelsim和synopsys vcs等软件，并且通过Vivado调用仿真软件进行仿真。
+
 ## 辅助软件及驱动
 * [CP210x USB转串口](https://www.silabs.com/products/development-tools/software/usb-to-uart-bridge-vcp-drivers)：用于通过串口连接ZCU102开发板。
 * [SD卡镜像烧写软件(Windows)](https://www.balena.io/etcher/)：烧写完整img格式镜像至SD卡。
