@@ -3,6 +3,7 @@
 
 Xilinx FPGA开发中主要用到以下几个软件：
 - **Vivado**：Xilinx的官方集成开发环境，完整版包含RTL/Block Design/HLS等开发方式，且包含仿真/综合/布局布线工具等。
+- **Vitis（可选）**: 从2019.2版本开始，Xilinx提供Vitis开发套件，将之前的SDK，SDAccel和SDSoC相关的功能合并为统一的软件平台Vitis。
 - **Petalinux(可选)**：用于制作FPGA SoC的linux系统内核的工具。使用Micro Blaze软核或Zynq系列的芯片时，需要运行linux系统则必备。仅限Linux系统安装。
 - **第三方仿真软件(可选)**：Vivado支持联合第三方仿真软件来进行系统仿真，诸如ModelSim/Synopsys VCS等软件都可以提供较好的仿真体验。当需要使用Xilinx的IP进行联合仿真时，需要通过Vivado预先编译好用于第三方软件的仿真库。
 - **第三方综合软件（可选）**：Vivado支持使用第三方综合软件来生成网表，如symplify。
@@ -21,8 +22,19 @@ Xilinx FPGA开发中主要用到以下几个软件：
    ```bash
    vivado &
    ```
-
 注意：不同版本的Vivado并不冲突，只需要设置相应的路径即可完成切换。具有充足空间的服务器可以考虑保留多个版本的Vivado方便兼容不同的工程。
+
+## 安装Vitis开发套件
+1. 下载安装文件。官方下载地址：[https://china.xilinx.com/support/download/index.html/content/xilinx/zh/downloadNav/vitis.html](https://china.xilinx.com/support/download/index.html/content/xilinx/zh/downloadNav/vitis.html)
+2. 运行安装程序
+3. 在命令行执行以下命令将vivado添加到路径中，同时建议将该命令添加到~/.bashrc文件中以便命令行启动时自动添加该路径：
+    ```bash
+    source <path-to-vitis>/settings64.sh
+    ```
+4. 在命令行中运行以下命令开启Vivado:
+   ```bash
+   vitis &
+   ```
 
 ## 安装petalinux
 参考资料：[UG1144](https://www.xilinx.com/support/documentation/sw_manuals/xilinx2019_1/ug1144-petalinux-tools-reference-guide.pdf)
@@ -43,6 +55,11 @@ Xilinx FPGA开发中主要用到以下几个软件：
    ```bash
    echo $PETALINUX
    ```
+
+## 安装XRT(Xilinx Runtime)
+
+方法1：从源码编译安装：[https://github.com/Xilinx/XRT](https://github.com/Xilinx/XRT)
+方法2：下载编译好的安装包：[https://china.xilinx.com/html_docs/xilinx2019_2/vitis_doc/Chunk1674708719.html?hl=xrt](https://china.xilinx.com/html_docs/xilinx2019_2/vitis_doc/Chunk1674708719.html?hl=xrt)
 
 ## 仿真软件
 
