@@ -41,5 +41,57 @@ write_project_tcl {../scripts/create_prj.tcl}
 ```
 
 ## petalinux工程
+参考内容：[UG1144](https://www.xilinx.com/support/documentation/sw_manuals/xilinx2019_1/ug1144-petalinux-tools-reference-guide.pdf)，官方目前正在完善版本管理流程，以下内容仅供参考。
+
+1. 建立petalinux工程并初始化
+   ``` bash
+   petalinux-create -t project --name <prj-name> --template zynqMP # or any way you like
+   cd <prj-name>
+   git init
+   ```
+2. petalinux已经默认提供了.gitignore文件，内容如下：
+   ```
+   */*/config.old
+   */*/rootfs_config.old
+   build/
+   images/linux/
+   pre-built/linux/
+   .petalinux/*
+   !.petalinux/metadata
+   *.o
+   *.jou
+   *.log
+   project-spec/meta-plnx-generated/
+   /components/plnx_workspace
+   ```
+3. 在git commit之前，使用如下命令清理工作区。但是这可能会导致下一次petalinux-build的时间大幅增加，所以目前应该避免频繁提交。
+   ``` bash
+   petalinux-build -x mrproper
+   ```
 
 ## HLS工程
+
+1. 建立HLS工程并初始化
+   ``` bash
+   cd <project-root>
+   git init
+   ```
+
+2. 添加.gitignore文件
+   ```
+   Debug/
+   # 综合及仿真文件可以忽略，但是directive要保留，注意这里默认solution的名称为   solution1,2...
+   solution*/csim
+   solution*/impl
+   solution*/sim
+   solution*/syn
+   solution*/.autopilot
+   solution*/.debug
+   solution*/.tcls
+   # 忽略所有log文件
+   *.log
+   ```
+
+3. 添加源文件建议在工程的根目录下建立src文件夹存储所有源文件，可以考虑单独建立sim文件夹存放测试程序。此时的文件夹结构如下：
+   
+   ![avatar](../img/hls_folder.png)
