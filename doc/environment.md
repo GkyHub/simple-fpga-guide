@@ -75,7 +75,7 @@ Vivado自带仿真工具xsim。开发者也可以使用自己的仿真软件，�
 
 ## 配置VSCode用于Verilog编程
 
-Visual Studio Code作为目前主流的编辑器，对Verilog及C/C++编程提供了良好的支持，推荐使用。Vivado和HLS作为IDE打开缓慢，在前期编码时可以尽量在编辑器中开发，提高效率。
+Visual Studio Code作为目前主流的编辑器，其中的插件对Verilog提供了良好的支持，推荐使用。Vivado作为IDE打开缓慢，在前期编码时可以尽量在编辑器中开发，提高效率。
 
 1. 配置Vivado路径，将Vivado的bin文件夹加入PATH。（在Windows下需要配置，Linux下在安装时已经配置完成）配置完成后执行如下指令验证：
    ``` bash
@@ -86,6 +86,22 @@ Visual Studio Code作为目前主流的编辑器，对Verilog及C/C++编程提�
 3. 从VSCode的应用商店安装Verilog HDL/System Verilog插件。
 
 4. 选择设置中的Verilog Configuration，将Verilog>Linting:Linter设置为xvlog。
+
+## 配置VSCode用于HLS编程
+
+Visual Studio Code作为目前主流的编辑器，其中的插件对C/C++提供了良好的支持，推荐使用。Vivado HLS作为IDE打开缓慢，在前期编码时可以尽量在编辑器中开发，提高效率。其中主要需要配置的是将HLS的头文件目录添加到VSCoe的配置中，从而实现自动语法检查以及提示等功能。
+
+1. 在VSCode的应用商店中安装C/C++插件。
+   
+2. 在VSCode中打开HLS工程文件夹，此时系统会提示配置头文件路径来包含找不到的头文件。以下为配置方法。
+   
+3. 使用Vivado HLS打开任意一HLS工程，在左侧浏览器的项目文件夹上右键选择properties。
+   
+4. 选择C/C++ General->Paths and Symbols可以在右侧看到包含的所有C及C++头文件的路径。
+   
+5. 选择Export Settings将该配置保存为xml文件，其中可以看到所有头文件路径。将其复制到VSCode的配置文件中。
+
+
 
 ## Trouble Shooting
 
