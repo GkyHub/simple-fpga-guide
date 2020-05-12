@@ -73,6 +73,20 @@ Vivado自带仿真工具xsim。开发者也可以使用自己的仿真软件，�
   sudo apt-get install gparted
   ```
 
+## 配置VSCode用于Verilog编程
+
+Visual Studio Code作为目前主流的编辑器，对Verilog及C/C++编程提供了良好的支持，推荐使用。Vivado和HLS作为IDE打开缓慢，在前期编码时可以尽量在编辑器中开发，提高效率。
+
+1. 配置Vivado路径，将Vivado的bin文件夹加入PATH。（在Windows下需要配置，Linux下在安装时已经配置完成）配置完成后执行如下指令验证：
+   ``` bash
+   xvlog --version # 输出Vivado Simulator 20xx.x
+   ```
+2. 安装ctags，将ctags路径添加到PATH。
+
+3. 从VSCode的应用商店安装Verilog HDL/System Verilog插件。
+
+4. 选择设置中的Verilog Configuration，将Verilog>Linting:Linter设置为xvlog。
+
 ## Trouble Shooting
 
 官方手册一般会给一些trouble shooting的内容，但是还可能出现一些漏洞，这里给出一些补充：
