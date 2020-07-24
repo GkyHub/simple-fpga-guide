@@ -6,8 +6,8 @@
 2. [开发环境](./doc/environment.md)
 3. [FPGA开发流程](./doc/develop_flow.md)
 4. [代码规范](./doc/code_style.md)
-5. [管理工程文件](./doc/git_your_prj.md)
-6. 例程
+5. [管理工程文件](./doc/git_prj.md)
+6. [例程](./doc/sample_code.md)
 7. [其他](./doc/etc.md)
 
 教程中的内容不免会包括一些现有的博客，文档等内容。添加内容的基本的原则是：
