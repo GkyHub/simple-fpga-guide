@@ -48,13 +48,38 @@ FPGA中的缓存通常为统一大小的块。Xilinx的缓存的基本粒度为3
 
 FPGA中的DSP数量在几百到几千不等，因此FPGA在计算上可以提供极高的并行度。
 
-## 3. 性能
+## 3. FPGA SoC系统
+
+### 3.1. CPU
+
+目前很多的FPGA，如Xilinx的Zynq 7000和UltraScale MPSoC以及Versal系列，都在芯片上集成了ARM架构的CPU。为系统设计带来了便利，一方面基于CPU可以快速搭建DEMO。另一方面，一些不利于FPGA实现的功能可以在片上集成的CPU上实现，两者形成互补，为方案设计提供更大的选择空间。Xilinx的术语中，通常将SoC中的CPU成为PS（Processing System），将FPGA部分称为PL（Programmable Logic）。
+
+![avatar](../img/zynq-eg-block.png)
+
+PS和PL之间的接口非常丰富，常用的有：
+* AXI-Master接口提供了PS访问PL的读写接口，该接口以地址映射的形式连接PL上的各种逻辑单元。
+* HP接口提供了FPGA访问CPU侧内存的接口，通过该接口，PL侧的逻辑单元通过物理地址直接访问CPU的内存，从而实现高效的数据交互。
+* 时钟和复位：PS侧可以为PL侧提供多个可配置的参考时钟以及复位信号。
+* 中断：PS和PL可以互相提供中断信号。
+* EMIO：PS侧直接和PL侧连接的可配置IO接口
+
+### 3.2. HBM
+
+最新的FPGA，如Xilinx的VU3xP系列在芯片内集成了HBM存储，用以替代片外的DDR内存，同时提供更大的带宽（一般大于100GB/s）。
+
+### 3.3. 硬核接口
+
+### 3.4. Adaptive Engine
+
+Xilinx最新的Versal系列芯片进一步强化了SoC的概念。
+
+## 4. 性能
 
 相比于CPU和GPU，FPGA的主频很低，通常在100-200MHz。最新的FPGA可以运行在300MHz以上，但也很难超过400MHz。因此单纯就运算速度而言，基于FPGA的硬件设计必须有足够的并行度或其他优化手段才可以和CPU以及GPU匹敌。
 
 相对于通用计算平台，FPGA的硬件设计冗余更小，提供相同的功能，只需要很低的功耗。低端的FPGA的功耗可以在5W以内，而高端的FPGA通常也不会超过100W。
 
-## 4. 参考资料
+## 5. 参考资料
 
 关于FPGA的各种组成单元，Xilinx官方的User Guide有着较为详细的说明。可供参考：
 - 缓存：[UG573](https://china.xilinx.com/support/documentation/user_guides/ug573-ultrascale-memory-resources.pdf)
