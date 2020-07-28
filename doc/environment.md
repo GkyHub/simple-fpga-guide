@@ -27,11 +27,11 @@ Xilinx FPGA开发中主要用到以下几个软件：
 ## 安装Vitis开发套件
 1. 下载安装文件。官方下载地址：[https://china.xilinx.com/support/download/index.html/content/xilinx/zh/downloadNav/vitis.html](https://china.xilinx.com/support/download/index.html/content/xilinx/zh/downloadNav/vitis.html)
 2. 运行安装程序
-3. 在命令行执行以下命令将vivado添加到路径中，同时建议将该命令添加到~/.bashrc文件中以便命令行启动时自动添加该路径：
+3. 在命令行执行以下命令将Vitis添加到路径中，同时建议将该命令添加到~/.bashrc文件中以便命令行启动时自动添加该路径：
     ```bash
     source <path-to-vitis>/settings64.sh
     ```
-4. 在命令行中运行以下命令开启Vivado:
+4. 在命令行中运行以下命令开启Vitis:
    ```bash
    vitis &
    ```
