@@ -1,11 +1,11 @@
 # 在Zynq MPSoC开发板上烧写FPGA逻辑并启动Linux
 
-本教程参考内容包括：
+参考内容：
 - [https://blog.csdn.net/jiangjiali66/article/details/46897505](https://blog.csdn.net/jiangjiali66/article/details/46897505)
 - [https://blog.csdn.net/lulugay/article/details/83867655](https://blog.csdn.net/lulugay/article/details/83867655)
 - [https://blog.csdn.net/lulugay/article/details/83240981](https://blog.csdn.net/lulugay/article/details/83240981)
 
-在最后一部分，我们会对流程中的细节和具体发生了什么事情进行说明。
+在最后一部分，我们会对流程中的细节进行说明。
 
 ## 准备FPGA部分
 1. 进入Vivado工程，运行Generate bitstream
@@ -40,14 +40,32 @@
 
    如果需要对内核进行其他配置，请根据[UG1144](https://www.xilinx.com/support/documentation/sw_manuals/xilinx2019_1/ug1144-petalinux-tools-reference-guide.pdf)执行。一些常用的配置可以参考Xilinx wiki提供的一个[教程](https://xilinx-wiki.atlassian.net/wiki/spaces/A/pages/18841937/Zynq+UltraScale+MPSoC+Ubuntu+part+2+-+Building+and+Running+the+Ubuntu+Desktop+From+Sources)。
 
-3. 编译（第一次时间较长，10-30分钟，以后可以增量编译）
+3. 配置设备树
+   用户可以自定义设备树，用户自可配置的设备树文件：<project>/project-spec/meta-user/recipes-bsp/device-tree/files/system-user.dtsi
+
+   注意：petalinux默认会根据用户导入的xsa生成PL侧的设备树。如果用户对于PL侧的逻辑想采用自己的设备树，可以在petalinux-config->DTG Settings中，勾选Remove PL from devicetree选项，以避免一些不必要的设备树冲突。
+
+4. 配置驱动
+   如果用户希望在petalinux构建系统的过程中编译驱动并安装到内核中，可以在petalinux中加入源码。首先通过如下指令添加驱动模块：
+   ``` bash
+   petalinux-create -t modules --name <module-name> --enable
+   ```
+   <project>/project-spec/meta-user/recipes-modules下会出现相应的文件夹，其中包含一个默认的驱动模板，用户需要根据自己的需要替换或修改其中的文件。
+
+   经过上述配置后，用户可以在通过petalinux-config -c rootfs指令，进入modules项看到已经加入工程的驱动。
+
+5. 编译（第一次时间较长，10-30分钟，以后可以增量编译）
    ``` bash
    petalinux-build
    ```
    该过程会生成一系列文件，在```<path-to-project>/images/linux```文件夹内。
+   Petalinux采用Yocto工具搭建系统，工具会从网络或是本地获取软件包进行编译和安装。将Xilinx提供的镜像提前下载下来，从本地获取软件可以加快这一过程。在petalinux-build之前，可以在petalinux-config中进行配置：
+   Yocto Settings → Local sstate feeds settings → local sstate feeds url 和 Yocto Settings → Add pre-mirror url
+   但是对于一些必须从github上下载的第三方软件，是无法加速的。
 
-4. 打包镜像
+6. 打包镜像
    ``` bash
+   # 2020.1版本中只需要指定fsbl，u-boot和fpga三项，其余内容会自动添加进去
    petalinux-package --boot --format BIN \
        --fsbl   ./images/linux/zynqmp_fsbl.elf \
        --u-boot ./images/linux/u-boot.elf \
@@ -58,26 +76,33 @@
 
 ## 准备SD卡
 
-1. 第一使用SD卡时需要对SD卡进行格式化和分区。启动gparted，将SD卡分为两个分区：
+1. （可选）安装gparted工具为新的SD卡分区。
+   ```
+   sudo apt install gparted
+   ```
+
+2. （可选）第一使用SD卡时需要对SD卡进行格式化和分区。启动gparted，将SD卡分为两个分区：
    - BOOT分区：格式为FAT32，大小自定义，通常为几百MB，够用即可
    - ROOTFS分区：格式为EXT4，分配全部剩余空间即可
 
-2. 将BOOT必要的文件拷贝到SD卡中
+3. 将BOOT必要的文件拷贝到SD卡中
    ```bash
    cd <path-to-petalinux-project>/images/linux
    cp BOOT.BIN image.ub <path-to-BOOT-of-SDCARD>
    ```
 
-3. 拷贝文件系统。可以使用```<path-to-petalinux-project>/images/linux```下的rootfs.tar.gz，也可以自己下载文件系统，例如从：[https://rcn-ee.com/rootfs/eewiki/minfs/](https://rcn-ee.com/rootfs/eewiki/minfs/)。之后将文件系统解压缩，运行如下命令：
+4. 拷贝文件系统。可以使用```<path-to-petalinux-project>/images/linux```下的rootfs.tar.gz，也可以自己下载文件系统，例如从：[https://rcn-ee.com/rootfs/eewiki/minfs/](https://rcn-ee.com/rootfs/eewiki/minfs/)。之后将文件系统解压缩，运行如下命令：
    ```bash
-   cd <path-to-rootfs>
-   # 将文件系统复制到ROOTFS分区中，注意不可以使用cp
-   sudo rsync -av ./ <path-to-ROOTFS-of-SDCARD>
-   # 清空缓冲区，确保文件写入SD卡
-   sync
-   # 修改权限，否则启动以后会出问题
-   sudo chown root:root <path-to-ROOTFS-of-SDCARD>
-   sudo chmod 755 <path-to-ROOTFS-of-SDCARD>
+    # 将文件系统复制到ROOTFS分区中，注意不可以使用cp
+    sudo rsync -av <path-to-rootfs> <path-to-ROOTFS-of-SDCARD>
+    # 如果文件系统是压缩包形式，可以直接解压到目标分区
+    # sudo tar -zxvf rootfs.tar.gz <path-to-ROOTFS-of-SDCARD>
+
+    # 清空缓冲区，确保文件写入SD卡
+    sync
+    # 修改权限，否则启动以后会出问题（参考网络资料中提到，但是似乎也可以不做）
+    # sudo chown root:root <path-to-ROOTFS-of-SDCARD>
+    # sudo chmod 755 <path-to-ROOTFS-of-SDCARD>
    ```
 
 ## 启动板卡
